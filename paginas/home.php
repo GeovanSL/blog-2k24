@@ -204,7 +204,7 @@
                 <div class="card-body">
                     <div id="posts" class="posts">
                         <!-- Os posts iniciais serão inseridos aqui -->
-
+                    <?php consolePrint('oiiiiii') ?>
                             
                     </div>
                     <div id="loading" style="display: none;"></div>
@@ -272,7 +272,6 @@ $(document).ready(function() {
                         html += '<p>' + $('<div/>').text(post.corpo).html().replace(/\n/g, '<br>') + '</p>';
 
                                  // Botão para exibir comentários
-                        html += '<button class="btn btn-primary" data-post-id="' + post.id_post + '">Exibir Comentários</button>';
 
                         html += '<p><small>Da categoria: ' + $('<div/>').text(post.topico_nome).html() + '</small></p>'; // Adicionando o nome do tópico
                         html += '<p><small>Postado em: ' + post.data_criacao + '</small></p>';
@@ -287,17 +286,34 @@ $(document).ready(function() {
                         html += '</div>';
 
                         if (post.id_user == usuarioLogado) {
-                            console.log("veridico")
+                            console.log(post.id_user);
+                            html += `
+                                            <div style="display: flex; align-items: flex-end;">
+                                            ` 
+                                            html += '<button class="btn btn-primary" data-post-id="' + post.id_post + '"> <i class="fas fa-comments"></i></button>';
+                                            html += `     
+                                                <button class="btn btn-primary" onclick="openEditForm(<?php echo $post['id_post']; ?>)" style="margin-left: 10px;">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </button>
+                                                <form method="post" action="backend/remover_post.php" style="display:inline;">
+                                                    `
+                                                    html += '<input type="hidden" name="id_post" value="' + post.id_post + '">';
+                            html += `                                                                                   
+                                                    <button type="submit" class="btn btn-danger" style="margin-left: 10px;" onclick="return confirm('Tem certeza que deseja deletar?');">
+                                                           <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                            `
+                            
                             html += '<form method="post" action="backend/remover_post.php" style="display:inline;">';
-                            html += '<input type="hidden" name="id_post" value="' + post.id_post + '">';
-                            html += '<button type="submit" class="btn btn-danger" onclick="return confirm(\'Tem certeza que deseja remover este post?\');">Remover</button>';
                             html += '</form>';
                         }
 
                         html += '</article><hr style="border: 1px solid #ffc107;">';
                         $('#posts').append(html);
 
-                        if (posts.length <= 5) {
+                        if (posts.length < 5) {
                             $(window).off('scroll', onScroll);
                         }
                     });

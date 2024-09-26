@@ -29,13 +29,16 @@ try {
     $stmt = $conect->prepare($deletePost);
     $stmt->bindParam(':id_post', $id_post, PDO::PARAM_INT);
     $stmt->execute();
-
+    consolePrint($id_post);
     // Redireciona de volta para a página inicial com uma mensagem de sucesso
     $_SESSION['message'] = 'Post removido com sucesso!';
+
+    consolePrint('post removido com sucesso');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 } catch (PDOException $e) {
     error_log("Erro ao remover o post: " . $e->getMessage());
     $_SESSION['error'] = 'Erro ao remover o post. Tente novamente.';
+    consolePrint('error', $e->getMessage());
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 }
 ?>
